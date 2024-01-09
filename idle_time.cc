@@ -1,5 +1,7 @@
 #include "utils.h"
 
+#include <assert.h>
+
 #include <iostream>
 #include <fstream>
 
