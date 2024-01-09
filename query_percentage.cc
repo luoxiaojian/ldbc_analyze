@@ -48,19 +48,22 @@ int main(int argc, char** argv) {
     log_num = records_list.size();
     for (int i = 0; i < log_num; ++i) {
         for (size_t j = warmup_num[i]; j < records_list[i].size(); ++j) {
-            auto iter = cpu_time.find(records_list[i][j].type);
+            auto start_time = records_list[i][j].start;
+            auto end_time = records_list[i][j].end;
+            auto type = records_list[i][j].type;
+            auto iter = cpu_time.find(type);
             if (iter == cpu_time.end()) {
-                cpu_time[records_list[i][j].type] = std::vector<int>(interval_num, 0);
-                iter = cpu_time.find(records_list[i][j].type);
+                cpu_time[type] = std::vector<int>(interval_num, 0);
+                iter = cpu_time.find(type);
             }
-            size_t start_interval_idx = (records_list[i][j].start - begin_time) / interval_microsec;
-            size_t end_interval_idx = (records_list[i][j].end - begin_time) / interval_microsec;
+            size_t start_interval_idx = (start_time - begin_time) / interval_microsec;
+            size_t end_interval_idx = (end_time - begin_time) / interval_microsec;
             if (start_interval_idx == end_interval_idx) {
-                iter->second[start_interval_idx] += (records_list[i][j].end - records_list[i][j].start);
+                iter->second[start_interval_idx] += (end_time - start_time);
             } else {
                 assert(end_interval_idx = start_interval_idx + 1);
-                iter->second[start_interval_idx] += ((start_interval_idx * interval_microsec) + begin_time - records_list[i][j].start);
-                iter->second[end_interval_idx] += (records_list[i][j].end - ((start_interval_idx * interval_microsec) + begin_time));
+                iter->second[start_interval_idx] += (((start_interval_idx + 1) * interval_microsec) + begin_time - start_time);
+                iter->second[end_interval_idx] += (records_list[i][j].end - ((end_interval_idx * interval_microsec) + begin_time));
             }
         }
     }
