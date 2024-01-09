@@ -10,3 +10,4 @@ add_executable(ldbc_analyze main.cpp)
 
 add_executable(idle_time idle_time.cc)
 add_executable(query_freq_lat query_freq_lat.cc)
+add_executable(query_percentage query_percentage.cc)
