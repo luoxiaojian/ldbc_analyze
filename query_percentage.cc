@@ -6,6 +6,7 @@
 #include <map>
 #include <vector>
 #include <fstream>
+#include <filesystem>
 
 int main(int argc, char** argv) {
     if (argc != 4) {
@@ -71,9 +72,10 @@ int main(int argc, char** argv) {
         }
     }
 
+    std::filesystem::create_directory("./percentage");
     for (auto& pair : cpu_time) {
         {
-            std::string output_path = prefix + ".percentage_" + std::to_string(interval_min) + "_q" + std::to_string(pair.first);
+            std::string output_path = prefix + "./percentage/i" + std::to_string(interval_min) + "_q" + std::to_string(pair.first);
             std::ofstream fout(output_path);
             for (size_t i = 0; i < pair.second.size(); ++i) {
                 fout << static_cast<double>(pair.second[i]) / static_cast<double>(interval_total_cpu_time[i]) << std::endl;

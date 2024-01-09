@@ -4,6 +4,7 @@
 #include <map>
 #include <vector>
 #include <fstream>
+#include <filesystem>
 
 int main(int argc, char** argv) {
     if (argc != 4) {
@@ -66,9 +67,11 @@ int main(int argc, char** argv) {
         }
     }
 
+    std::filesystem::create_directory("./freq");
+    std::filesystem::create_directory("./lat");
     for (auto& pair : frequencies) {
         {
-            std::string output_path = prefix + ".freq_" + std::to_string(interval_min) + "_q" + std::to_string(pair.first);
+            std::string output_path = "./freq/i" + std::to_string(interval_min) + "_q" + std::to_string(pair.first);
             std::ofstream fout(output_path);
             for (size_t i = 0; i < pair.second.size(); ++i) {
                 fout << pair.second[i] << std::endl;
@@ -76,7 +79,7 @@ int main(int argc, char** argv) {
             fout.flush();
         }
         {
-            std::string output_path = prefix + ".lat_" + std::to_string(interval_min) + "_q" + std::to_string(pair.first);
+            std::string output_path = "./lat/i" + std::to_string(interval_min) + "_q" + std::to_string(pair.first);
             std::ofstream fout(output_path);
             auto& freq = pair.second;
             auto& lat = latencies[pair.first];
